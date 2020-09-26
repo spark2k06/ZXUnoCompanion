@@ -1,8 +1,8 @@
-Release 3 (07/06/2019)
+Release 3 (26/09/2020)
 ----------------------
 
 * Release final
-* Migracion al nuevo sistema de ZXUnoPS2
+* Migracion al nuevo sistema de ZXUnoPS2 alternativo
 * Los atajos especiales de Sugarless pasan a ser los siguientes:
 
 	* CS + SS + F -> T: TZXDUINO ON / OFF
@@ -10,8 +10,8 @@ Release 3 (07/06/2019)
 	* CS + SS + F -> W: XCHG DEL BREAK ON / OFF
 	* CS + SS + F -> J: Famicom <-> Atari/Megadrive
 
-Release 2 (12/01/2019)
-----------------------
+Release 2 (12/01/2019) -> Basada en la version original de ZXUnoPS2
+-------------------------------------------------------------------
 
 * Compatibilidad con gamepads famicom en Joy2PS2 mediante atajo (Extra+U -> J)
 * Extra+H -> Keypad - (C64, C16, Atari 800XL, BBC Micro y Apple II: Scanlines)
