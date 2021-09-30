@@ -1,7 +1,6 @@
-Release 4 (25/09/2021)
-----------------------
+Release 4 Reloaded (25/09/2021) 
+-------------------------------
 
-* Firmware reabierto
 * Se ha corregido la interceptación de algunos símbolos que faltaban en algunos cores con la combinación SS+, sobre todo de la primera fila del teclado (1,2,...), fallos introducidos cuando comencé con la rama alternativa, por tanto, la rama original no tiene estos fallos.
 
 * Se han añadido nuevos símbolos a varios modos de teclado ya existentes.
