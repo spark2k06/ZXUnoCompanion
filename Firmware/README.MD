@@ -7,13 +7,13 @@ Release 4 Reloaded (25/09/2021)
 
 * Se ha añadido soporte de modos de teclado a los siguientes cores:
 
-* Acorn Atom
-* Acorn Electron
-* ZX80
-* ZX81
-* EACA Colour Genie
-* Camputers Lynx
-* Elan Enterprise
+	* Acorn Atom
+	* Acorn Electron
+	* ZX80
+	* ZX81
+	* EACA Colour Genie
+	* Camputers Lynx
+	* Elan Enterprise
 
 Gracias @desUBIkado por la ayuda en la identificación de los nuevos símbolos, tanto para los modos de teclado ya implementados como para los nuevos. También por hacer de betatester en el firmware de ZXUnoPS2, firmware en el que está basado éste.
 
