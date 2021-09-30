@@ -75,86 +75,86 @@ uint8_t		  famicom = 0;
 unsigned char CAPS_SHIFT = KEY_LSHIFT;  //Caps Shift   (NO necesita E0)
 unsigned char SYMBOL_SHIFT = KEY_LCTRL; //Symbol Shift (NO necesita E0)
 
-										//Caps Shift (CAPS_SHIFT)
+                                        //Caps Shift (CAPS_SHIFT)
 #define CAPS_SHIFT_ROW 5  
 #define CAPS_SHIFT_COL 0  
 
-										//Symbol Shift (SYMBOL_SHIFT)
+                                        //Symbol Shift (SYMBOL_SHIFT)
 #define SYMBOL_SHIFT_ROW 7   
 #define SYMBOL_SHIFT_COL 1   
 
-										//SPACE (Escape)
+                                        //SPACE (Escape)
 #define SPACE_ROW 7 
 #define SPACE_COL 0 
 
-										//ENTER
+                                        //ENTER
 #define ENTER_ROW 6 
 #define ENTER_COL 0 
 
-										//Row 1..5
+                                        //Row 1..5
 #define N1_N5_ROW 0
-										//Cols 1..5
+                                        //Cols 1..5
 #define N1_COL 0 //
 #define N2_COL 1 //
 #define N3_COL 2 //
 #define N4_COL 3 //
 #define N5_COL 4 //
 
-										//Row 6..0
+                                        //Row 6..0
 #define N6_N0_ROW 3
-										//Cols 6..0
+                                        //Cols 6..0
 #define N6_COL 4 //
 #define N7_COL 3 //
 #define N8_COL 2 //
 #define N9_COL 1 //
 #define N0_COL 0 //
 
-										//Row Q-T
+                                        //Row Q-T
 #define Q_T_ROW 1
-										//Cols Q-T
+                                        //Cols Q-T
 #define Q_COL 0 //
 #define W_COL 1 //
 #define E_COL 2 //
 #define R_COL 3 //
 #define T_COL 4 //
 
-										//Row Y-P
+                                        //Row Y-P
 #define Y_P_ROW 4
-										//Cols Y-P
+                                        //Cols Y-P
 #define Y_COL 4 //
 #define U_COL 3 //
 #define I_COL 2 //
 #define O_COL 1 //
 #define P_COL 0 //
 
-										//Row A-G
+                                        //Row A-G
 #define A_G_ROW 2
-										//Cols A-G
+                                        //Cols A-G
 #define A_COL 0 //
 #define S_COL 1 //
 #define D_COL 2 //
 #define F_COL 3 //
 #define G_COL 4 //
 
-										//Row H-L
+                                        //Row H-L
 #define H_L_ROW 6
-										//Cols H-L
+                                        //Cols H-L
 #define H_COL 4 //
 #define J_COL 3 //
 #define K_COL 2 //
 #define L_COL 1 //
 
-										//Row Z-V
+                                        //Row Z-V
 #define Z_V_ROW 5 //
-										//Cols Z-V
+                                        //Cols Z-V
 #define Z_COL 1 //
 #define X_COL 2 //
 #define C_COL 3 //
 #define V_COL 4 //
 
-										//Row B-M
+                                        //Row B-M
 #define B_M_ROW 7
-										//Cols B-M
+                                        //Cols B-M
 #define B_COL 4 //
 #define N_COL 3 //
 #define M_COL 2 //
@@ -380,19 +380,19 @@ void ReadFamicom()
 
 void ps2Init()
 {
-	PS2_PORT &= ~_BV(PS2_DAT); //A 0
-	PS2_PORT &= ~_BV(PS2_CLK); //A 0
-	ps2Mode(PS2_DAT, HI);
-	ps2Mode(PS2_CLK, HI);
+    PS2_PORT &= ~_BV(PS2_DAT); //A 0
+    PS2_PORT &= ~_BV(PS2_CLK); //A 0
+    ps2Mode(PS2_DAT, HI);
+    ps2Mode(PS2_CLK, HI);
 }
 
 uint8_t ps2Stat()
 {
-	if (!(PS2_PIN & (1 << PS2_CLK)))
-		return 1;
-	if (!(PS2_PIN & (1 << PS2_DAT)))
-		return 1;
-	return 0;
+    if (!(PS2_PIN & (1 << PS2_CLK)))
+        return 1;
+    if (!(PS2_PIN & (1 << PS2_DAT)))
+        return 1;
+    return 0;
 }
 
 uint8_t checkState(uint16_t tramo) {
@@ -482,56 +482,55 @@ void sendPS2(unsigned char code)
 
 int getPS2(unsigned char *ret) //Lectura de PS2 para acceso bidireccional
 {
-	unsigned char data = 0x00;
-	unsigned char p = 0x01;
-	uint8_t i = 0;
+    unsigned char data = 0x00;
+    unsigned char p = 0x01;
+    uint8_t i = 0;
 
-	// discard the start bit
-	while ((PS2_PIN & (1 << PS2_DAT)));
-	while (!(PS2_PIN & (1 << PS2_CLK)));
+    // discard the start bit
+    while ((PS2_PIN & (1 << PS2_DAT)));
+    while (!(PS2_PIN & (1 << PS2_CLK)));
 
-	// Bit de comienzo
-	_delay_us_4usteps(CK1*CKm);
-	ps2Mode(PS2_CLK, LO);
-	_delay_us_4usteps(CK2*CKm);
-	ps2Mode(PS2_CLK, HI);
-	_delay_us_4usteps(CK1*CKm);
+    // Bit de comienzo
+    _delay_us_4usteps(CK1*CKm);
+    ps2Mode(PS2_CLK, LO);
+    _delay_us_4usteps(CK2*CKm);
+    ps2Mode(PS2_CLK, HI);
+    _delay_us_4usteps(CK1*CKm);
 
-	// read each data bit
-	for (i = 0; i<8; i++) {
-		if ((PS2_PIN & (1 << PS2_DAT))) {
-			data = data | (1 << i);
-			p = p ^ 1;
-		}
-		_delay_us_4usteps(CK1*CKm);
-		ps2Mode(PS2_CLK, LO);
-		_delay_us_4usteps(CK2*CKm);
-		ps2Mode(PS2_CLK, HI);
-		_delay_us_4usteps(CK1*CKm);
-	}
+    // read each data bit
+    for (i = 0; i<8; i++) {
+        if ((PS2_PIN & (1 << PS2_DAT))) {
+            data = data | (1 << i);
+            p = p ^ 1;
+        }
+        _delay_us_4usteps(CK1*CKm);
+        ps2Mode(PS2_CLK, LO);
+        _delay_us_4usteps(CK2*CKm);
+        ps2Mode(PS2_CLK, HI);
+        _delay_us_4usteps(CK1*CKm);
+    }
 
-	// read the parity bit	
-	if (((PS2_PIN & (1 << PS2_DAT)) != 0) != p) {
-		return -1;
-	}
-	_delay_us_4usteps(CK1*CKm);
-	ps2Mode(PS2_CLK, LO);
-	_delay_us_4usteps(CK2*CKm);
-	ps2Mode(PS2_CLK, HI);
-	_delay_us_4usteps(CK1*CKm);
+    // read the parity bit	
+    if (((PS2_PIN & (1 << PS2_DAT)) != 0) != p) {
+        return -1;
+    }
+    _delay_us_4usteps(CK1*CKm);
+    ps2Mode(PS2_CLK, LO);
+    _delay_us_4usteps(CK2*CKm);
+    ps2Mode(PS2_CLK, HI);
+    _delay_us_4usteps(CK1*CKm);
 
-	// send 'ack' bit
-	ps2Mode(PS2_DAT, LO);
-	_delay_us_4usteps(CK1*CKm);
-	ps2Mode(PS2_CLK, LO);
-	_delay_us_4usteps(CK2*CKm);
-	ps2Mode(PS2_CLK, HI);
-	ps2Mode(PS2_DAT, HI);
+    // send 'ack' bit
+    ps2Mode(PS2_DAT, LO);
+    _delay_us_4usteps(CK1*CKm);
+    ps2Mode(PS2_CLK, LO);
+    _delay_us_4usteps(CK2*CKm);
+    ps2Mode(PS2_CLK, HI);
+    ps2Mode(PS2_DAT, HI);
+    _delay_us(100);
 
-	_delay_us(100);
-
-	*ret = data;
-	return 0;
+    *ret = data;
+    return 0;
 }
 
 //codifica envio de caracteres ps/2 
@@ -589,27 +588,27 @@ void PressKey(unsigned char key, unsigned char scancodeset)
 
 void imprimeversion() //Imprime la fecha de la version en modos que no sean ZX ni PC
 {
-  int n;
-  char pausa = 50;
-  if (!modo)
-  {
-    sendPS2(0xF0); sendPS2(CAPS_SHIFT); matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL] = 0;
-    sendPS2(0xF0); sendPS2(SYMBOL_SHIFT); matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL] = 0;
-  }
+	int n;
+	char pausa = 50;
+	if (!modo)
+	{
+		sendPS2(0xF0); sendPS2(CAPS_SHIFT); matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL] = 0;
+		sendPS2(0xF0); sendPS2(SYMBOL_SHIFT); matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL] = 0;
+	}
 
-  sendPS2(KEY_SPACE); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_SPACE);
+	sendPS2(KEY_SPACE); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_SPACE);
 
-  for (n = 0; n<8; n++)
-  {
-    if (n == 2 || n == 4) { _delay_ms(pausa); sendPS2(KEY_PUNTO); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_PUNTO); }
-    _delay_ms(pausa);
-    sendPS2(versionKeyCodes[version[n]]);
-    _delay_ms(pausa);
-    sendPS2(0xF0);
-    sendPS2(versionKeyCodes[version[n]]);
-    _delay_ms(pausa);    
+	for (n = 0; n<8; n++)
+	{
+		if (n == 2 || n == 4) { _delay_ms(pausa); sendPS2(KEY_PUNTO); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_PUNTO); }
+		_delay_ms(pausa);
+		sendPS2(versionKeyCodes[version[n]]);
+		_delay_ms(pausa);
+		sendPS2(0xF0);
+		sendPS2(versionKeyCodes[version[n]]);
+		_delay_ms(pausa);    
    
-  }
+	}
 
   sendPS2(KEY_SPACE); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_SPACE);
   sendPS2(KEY_R); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_R);
@@ -620,8 +619,8 @@ void imprimeversion() //Imprime la fecha de la version en modos que no sean ZX n
   sendPS2(versionKeyCodes[rama[0]]);
   _delay_ms(pausa);   
  
-  fnpulsada = 1;
-  fnpulsando = 1;
+	fnpulsada = 1;
+	fnpulsando = 1;
 }
 
 void eepromsave() //Imprime ' .CFGFLASHED' y guarda en la EEPROM el modo actual
@@ -909,63 +908,63 @@ void cambia_cursors_kbpc()
 
 void cambiafkbmode()
 {
-	int n;
-	char pausa = 50;
-	if (!modo)
-	{
-		sendPS2(0xF0); sendPS2(CAPS_SHIFT); matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL] = 0;
-		sendPS2(0xF0); sendPS2(SYMBOL_SHIFT); matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL] = 0;
-	}
-	if (codeset == 2)
-	{
-		_delay_ms(pausa); sendPS2(KEY_SPACE); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_SPACE);
-		_delay_ms(pausa); sendPS2(KEY_PUNTO); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_PUNTO);
+  int n;
+  char pausa = 50;
+  if (!modo)
+  {
+    sendPS2(0xF0); sendPS2(CAPS_SHIFT); matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL] = 0;
+    sendPS2(0xF0); sendPS2(SYMBOL_SHIFT); matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL] = 0;
+  }
+  if (codeset == 2)
+  {
+    _delay_ms(pausa); sendPS2(KEY_SPACE); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_SPACE);
+    _delay_ms(pausa); sendPS2(KEY_PUNTO); _delay_ms(pausa); sendPS2(0xF0); sendPS2(KEY_PUNTO);
 
-		switch (fkbmode)
-		{
-		case 0:
-			for (n = 0; n < 15; n++)
-			{
-				_delay_ms(pausa);
-				sendPS2(fkbmode0[n]);
-				_delay_ms(pausa);
-				sendPS2(0xF0);
-				sendPS2(fkbmode0[n]);
-				_delay_ms(pausa);
-				eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
-			}
-			break;
-		case 1:
-			for (n = 0; n < 12; n++)
-			{
-				_delay_ms(pausa);
-				sendPS2(fkbmode1[n]);
-				_delay_ms(pausa);
-				sendPS2(0xF0);
-				sendPS2(fkbmode1[n]);
-				_delay_ms(pausa);
-				eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
-			}
-			break;
-		case 2:
-			for (n = 0; n < 6; n++)
-			{
-				_delay_ms(pausa);
-				sendPS2(fkbmode2[n]);
-				_delay_ms(pausa);
-				sendPS2(0xF0);
-				sendPS2(fkbmode2[n]);
-				_delay_ms(pausa);
-				eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
-			}
-			break;
-		default:
-			break;
-		}
+    switch (fkbmode)
+    {
+    case 0:
+      for (n = 0; n < 15; n++)
+      {
+        _delay_ms(pausa);
+        sendPS2(fkbmode0[n]);
+        _delay_ms(pausa);
+        sendPS2(0xF0);
+        sendPS2(fkbmode0[n]);
+        _delay_ms(pausa);
+        eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
+      }
+      break;
+    case 1:
+      for (n = 0; n < 12; n++)
+      {
+        _delay_ms(pausa);
+        sendPS2(fkbmode1[n]);
+        _delay_ms(pausa);
+        sendPS2(0xF0);
+        sendPS2(fkbmode1[n]);
+        _delay_ms(pausa);
+        eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
+      }
+      break;
+    case 2:
+      for (n = 0; n < 6; n++)
+      {
+        _delay_ms(pausa);
+        sendPS2(fkbmode2[n]);
+        _delay_ms(pausa);
+        sendPS2(0xF0);
+        sendPS2(fkbmode2[n]);
+        _delay_ms(pausa);
+        eeprom_write_byte((uint8_t*)6, (uint8_t)fkbmode);
+      }
+      break;
+    default:
+      break;
+    }
 
-	}
-	fnpulsada = 1;
-	fnpulsando = 1;
+  }
+  fnpulsada = 1;
+  fnpulsando = 1;
 }
 
 //Inicializar Joy2PS2
@@ -1022,16 +1021,16 @@ void matrixInit()
 {
 	uint8_t c, r;
 
-	for (c = 0; c<COLS; c++)
-	{
-		pinSet(pinsC[c], bcdC[c], _IN);
-		pinPut(pinsC[c], bcdC[c], HI);
-	}
+    for (c = 0; c<COLS; c++)
+    {
+        pinSet(pinsC[c], bcdC[c], _IN);
+        pinPut(pinsC[c], bcdC[c], HI);
+    }
 
-	for (r = 0; r < ROWS; r++)
-	{
-		pinSet(pinsR[r], bcdR[r], _IN);
-	}
+    for (r = 0; r < ROWS; r++)
+    {
+        pinSet(pinsR[r], bcdR[r], _IN);
+    }
 }
 
 KBMODE cambiarmodo2(KBMODE modokb)
@@ -1270,11 +1269,11 @@ unsigned char traducekey(unsigned char key, KBMODE modokb) // con esta funcion a
 				key == KEY_N ? KEY_COMA | 0x80 : key == KEY_M ? KEY_PUNTO | 0x80 : key == KEY_2 ? key : 0;
 			break;
 
-		default:
-			key = 0;
-			break;
-		}
-	}
+    default:
+        key = 0;
+        break;
+        }
+    }
 
 	return key;
 }
@@ -1314,37 +1313,37 @@ void sueltateclaconsymbol(unsigned char row, unsigned char col, KBMODE modokb)
 }
 void pulsateclaconshift(unsigned char row, unsigned char col, unsigned char key)
 {
-	typematicfirst = 0;
-	typematic_codeaux = 0;
-	if (!key) //si no esta mapeada saca la mayuscula
-	{
-    	if (codeset == 2) { sendPS2(KEY_LSHIFT); typematic_codeaux = KEY_LSHIFT; } else { sendPS2(KS1_LSHIFT); typematic_codeaux = KS1_LSHIFT; }
-    	if (codeset == 2) { sendPS2(mapZX[row][col]); typematic_code = mapZX[row][col]; } else { sendPS2(mapSET1[row][col]); typematic_code = mapSET1[row][col]; }
-	}
-	else
-	{
-		if (codeset == 2 && (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN)) { sendPS2(0xE0); typematic_codeaux = 0xE0; } //Es una tecla del codeset2 que necesita E0
-		if (codeset == 1 && (key == KS1_LEFT || key == KS1_RIGHT || key == KS1_UP || key == KS1_DOWN)) { sendPS2(0xE0); typematic_codeaux = 0xE0; }//Es una tecla del codeset1 que necesita E0
-		sendPS2(key);
-		typematic_code = key;
-	}
+    typematicfirst = 0;
+    typematic_codeaux = 0;
+    if (!key) //si no esta mapeada saca la mayuscula
+    {
+        if (codeset == 2) { sendPS2(KEY_LSHIFT); typematic_codeaux = KEY_LSHIFT; } else { sendPS2(KS1_LSHIFT); typematic_codeaux = KS1_LSHIFT; }
+        if (codeset == 2) { sendPS2(mapZX[row][col]); typematic_code = mapZX[row][col]; } else { sendPS2(mapSET1[row][col]); typematic_code = mapSET1[row][col]; }
+    }
+    else
+    {
+        if (codeset == 2 && (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN)) { sendPS2(0xE0); typematic_codeaux = 0xE0; } //Es una tecla del codeset2 que necesita E0
+        if (codeset == 1 && (key == KS1_LEFT || key == KS1_RIGHT || key == KS1_UP || key == KS1_DOWN)) { sendPS2(0xE0); typematic_codeaux = 0xE0; }//Es una tecla del codeset1 que necesita E0
+        sendPS2(key);
+        typematic_code = key;
+}
 }
 
 void sueltateclaconshift(unsigned char row, unsigned char col, unsigned char key)
 {
-	typematic_code = 0;
-	if (!key) //si no esta mapeada saca la mayuscula
-	{
-		if (codeset == 2) { sendPS2(0xF0); sendPS2(mapZX[row][col]); sendPS2(0xF0); sendPS2(KEY_LSHIFT); }
-		else { sendPS2(mapSET1[row][col] + KS1_RELEASE); sendPS2(KS1_LSHIFT + KS1_RELEASE); }
-	}
-	else
-	{
-		if (codeset == 2 && (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN)) sendPS2(0xE0); //Es una tecla del codeset2 que necesita E0
-		if (codeset == 1 && (key == KS1_LEFT || key == KS1_RIGHT || key == KS1_UP || key == KS1_DOWN)) sendPS2(0xE0); //Es una tecla del codeset1 que necesita E0
-		if (codeset == 2) { sendPS2(0xF0); sendPS2(key); }
-		else sendPS2(key + KS1_RELEASE);
-	}
+    typematic_code = 0;
+    if (!key) //si no esta mapeada saca la mayuscula
+    {
+        if (codeset == 2) { sendPS2(0xF0); sendPS2(mapZX[row][col]); sendPS2(0xF0); sendPS2(KEY_LSHIFT); }
+        else { sendPS2(mapSET1[row][col] + KS1_RELEASE); sendPS2(KS1_LSHIFT + KS1_RELEASE); }
+    }
+    else
+    {
+        if (codeset == 2 && (key == KEY_LEFT || key == KEY_RIGHT || key == KEY_UP || key == KEY_DOWN)) sendPS2(0xE0); //Es una tecla del codeset2 que necesita E0
+        if (codeset == 1 && (key == KS1_LEFT || key == KS1_RIGHT || key == KS1_UP || key == KS1_DOWN)) sendPS2(0xE0); //Es una tecla del codeset1 que necesita E0
+        if (codeset == 2) { sendPS2(0xF0); sendPS2(key); }
+        else sendPS2(key + KS1_RELEASE);
+    }
 }
 #ifdef membrane13x11
 void traduceextra2a(uint8_t r, uint8_t c, int8_t p)
@@ -1420,10 +1419,10 @@ void traduceextra2a(uint8_t r, uint8_t c, int8_t p)
 		cs_counter += p;
 		break;
 
-	default:
-		isextra2a = 0;
-		break;
-	}	
+    default:
+        isextra2a = 0;
+        break;
+    }
 
 	if (del_break_value)
 	{
@@ -1594,8 +1593,8 @@ void traduceextra2a(uint8_t r, uint8_t c, int8_t p)
 		else matriz[re][ce] = matriz[r][c];
 		matriz[rt][ct] = matriz[r][c] | csss_status;
 
-	}
-
+    }
+    
 }
 #endif
 
@@ -1640,8 +1639,8 @@ void joy2ps2Scan()
 }
 void matrixScan()
 {
-	uint8_t r, c;
-	uint8_t keyaux = 0;
+    uint8_t r, c;
+    uint8_t keyaux = 0;
 
 	fnpulsada = 0; //Se pone a 0 la pulsacion de una tecla de funcion
 	
@@ -1806,19 +1805,19 @@ void matrixScan()
 					cambiafkbmode();
 				}				 
 				//Activa el cambio de modo lo que dejara en bucle hasta que se pulse una tecla. El led se enciende.
-				if ((matriz[N1_N5_ROW][N1_COL] & 0x01) && fkbmode != 2) pulsafn(N1_N5_ROW, N1_COL, KEY_F1, 0, 0, 0, 0, 5);  //F1
-				if ((matriz[N1_N5_ROW][N2_COL] & 0x01) && fkbmode != 2) pulsafn(N1_N5_ROW, N2_COL, KEY_F2, 0, 0, 0, 0, 5);  //F2
-				if ((matriz[N1_N5_ROW][N3_COL] & 0x01) && fkbmode != 2) pulsafn(N1_N5_ROW, N3_COL, KEY_F3, 0, 0, 0, 0, 5);  //F3
-				if ((matriz[N1_N5_ROW][N4_COL] & 0x01) && fkbmode != 2) pulsafn(N1_N5_ROW, N4_COL, KEY_F4, 0, 0, 0, 0, 5);  //F4
-				if ((matriz[N1_N5_ROW][N5_COL] & 0x01) && fkbmode != 2) pulsafn(N1_N5_ROW, N5_COL, KEY_F5, 0, 0, 0, 0, 5);  //F5
-				if ((matriz[N6_N0_ROW][N6_COL] & 0x01) && fkbmode != 2) pulsafn(N6_N0_ROW, N6_COL, KEY_F6, 0, 0, 0, 0, 5);  //F6 
-				if ((matriz[N6_N0_ROW][N7_COL] & 0x01) && fkbmode != 2) pulsafn(N6_N0_ROW, N7_COL, KEY_F7, 0, 0, 0, 0, 5);  //F7
-				if ((matriz[N6_N0_ROW][N8_COL] & 0x01) && fkbmode != 2) pulsafn(N6_N0_ROW, N8_COL, KEY_F8, 0, 0, 0, 0, 5);  //F8
-				if ((matriz[N6_N0_ROW][N9_COL] & 0x01) && fkbmode != 2) pulsafn(N6_N0_ROW, N9_COL, KEY_F9, 0, 0, 0, 0, 5);  //F9
-				if ((matriz[N6_N0_ROW][N0_COL] & 0x01) && fkbmode != 2) pulsafn(N6_N0_ROW, N0_COL, KEY_F10, 0, 0, 0, 0, 5); //F10
+				if ((matriz[N1_N5_ROW][N1_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N1_N5_ROW, N1_COL, KEY_F1, 0, 0, 0, 0, 5);  //F1
+				if ((matriz[N1_N5_ROW][N2_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N1_N5_ROW, N2_COL, KEY_F2, 0, 0, 0, 0, 5);  //F2
+				if ((matriz[N1_N5_ROW][N3_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N1_N5_ROW, N3_COL, KEY_F3, 0, 0, 0, 0, 5);  //F3
+				if ((matriz[N1_N5_ROW][N4_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N1_N5_ROW, N4_COL, KEY_F4, 0, 0, 0, 0, 5);  //F4
+				if ((matriz[N1_N5_ROW][N5_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N1_N5_ROW, N5_COL, KEY_F5, 0, 0, 0, 0, 5);  //F5
+				if ((matriz[N6_N0_ROW][N6_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N6_N0_ROW, N6_COL, KEY_F6, 0, 0, 0, 0, 5);  //F6 
+				if ((matriz[N6_N0_ROW][N7_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N6_N0_ROW, N7_COL, KEY_F7, 0, 0, 0, 0, 5);  //F7
+				if ((matriz[N6_N0_ROW][N8_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N6_N0_ROW, N8_COL, KEY_F8, 0, 0, 0, 0, 5);  //F8
+				if ((matriz[N6_N0_ROW][N9_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N6_N0_ROW, N9_COL, KEY_F9, 0, 0, 0, 0, 5);  //F9
+				if ((matriz[N6_N0_ROW][N0_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(N6_N0_ROW, N0_COL, KEY_F10, 0, 0, 0, 0, 5); //F10
 
-				if ((matriz[Q_T_ROW][Q_COL] & 0x01) && fkbmode != 2) pulsafn(Q_T_ROW, Q_COL, KEY_F11, 0, 0, 0, 0, 50); //F11  
-				if ((matriz[Q_T_ROW][W_COL] & 0x01) && fkbmode != 2) pulsafn(Q_T_ROW, W_COL, KEY_F12, 0, 0, 0, 0, 50); //F12  
+				if ((matriz[Q_T_ROW][Q_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(Q_T_ROW, Q_COL, KEY_F11, 0, 0, 0, 0, 50); //F11  
+				if ((matriz[Q_T_ROW][W_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(Q_T_ROW, W_COL, KEY_F12, 0, 0, 0, 0, 50); //F12  
 
 				if ((matriz[A_G_ROW][S_COL] & 0x01) && modo)
 				{
@@ -1844,8 +1843,7 @@ void matrixScan()
 					{
 						pulsafn(A_G_ROW, S_COL, KEY_F12, 0, 0, 1, 0, 5);
 					}
-				}
-				if ((matriz[A_G_ROW][A_COL] & 0x01) && (fkbmode == 1 || modo)) pulsafn(A_G_ROW, A_COL, KEY_F10, 0, 0, 0, 0, 5);       //F10 para el NEXT (�Mejor cambiar a otra?)
+				}				
 
 				if ((matriz[Y_P_ROW][Y_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(Y_P_ROW, Y_COL, KEY_F5, 0, 0, 1, 1, 5);        //ZXUNO NMI (Control+Alt+F5)
 				if ((matriz[B_M_ROW][B_COL] & 0x01) && (fkbmode != 2 || modo)) pulsafn(B_M_ROW, B_COL, KEY_BACKSP, 0, 0, 1, 1, 5);    //ZXUNO Hard Reset (Control+Alt+Backsp)

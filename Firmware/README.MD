@@ -1,3 +1,23 @@
+Release 4 (25/09/2021)
+----------------------
+
+* Firmware reabierto
+* Se ha corregido la interceptación de algunos símbolos que faltaban en algunos cores con la combinación SS+, sobre todo de la primera fila del teclado (1,2,...), fallos introducidos cuando comencé con la rama alternativa, por tanto, la rama original no tiene estos fallos.
+
+* Se han añadido nuevos símbolos a varios modos de teclado ya existentes.
+
+* Se ha añadido soporte de modos de teclado a los siguientes cores:
+
+* Acorn Atom
+* Acorn Electron
+* ZX80
+* ZX81
+* EACA Colour Genie
+* Camputers Lynx
+* Elan Enterprise
+
+Gracias @desUBIkado por la ayuda en la identificación de los nuevos símbolos, tanto para los modos de teclado ya implementados como para los nuevos. También por hacer de betatester en el firmware de ZXUnoPS2, firmware en el que está basado éste.
+
 Release 3 (26/09/2020)
 ----------------------
 
